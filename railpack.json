@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "provider": "node",
+  "buildAptPackages": [],
+  "packages": {
+    "node": "20"
+  },
+  "steps": {
+    "install": {
+      "inputs": [
+        {
+          "image": "node:20-slim"
+        },
+        {
+          "local": "."
+        }
+      ],
+      "commands": [
+        {
+          "cmd": "npm ci"
+        },
+        {
+          "path": "/app/node_modules/.bin"
+        }
+      ],
+      "caches": ["npm"]
+    },
+    "build": {
+      "inputs": [
+        {
+          "step": "install"
+        }
+      ],
+      "commands": [
+        {
+          "cmd": "npm run build"
+        }
+      ]
+    }
+  },
+  "deploy": {
+    "base": {
+      "image": "node:20-slim"
+    },
+    "inputs": [
+      {
+        "step": "build"
+      }
+    ],
+    "startCommand": "npm start",
+    "paths": ["/app/node_modules/.bin"],
+    "aptPackages": []
+  }
+}
